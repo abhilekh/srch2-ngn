@@ -26,8 +26,12 @@ install_adb=false                           # Set this to true if you want to se
 
 #Download and install the Android SDK
 if [ ! -d $ANDROID_SDK_HOME ]; then
-	for a in $( wget -qO- http://developer.android.com/sdk/index.html | egrep -o "http://dl.google.com[^\"']*linux.tgz" ); do 
-		wget $a && tar --wildcards --no-anchored -xvzf android-sdk_*-linux.tgz; mv android-sdk-linux $ANDROID_SDK_HOME; rm android-sdk_*-linux.tgz;
+	for a in $( wget -qO- http://developer.android.com/sdk/index.html | egrep -o "http://dl.google.com[^\"']*linux.tgz" ); 
+        do 
+	wget $a 
+        tar --wildcards --no-anchored -xvzf android-sdk_*-linux.tgz
+        mv android-sdk-linux $ANDROID_SDK_HOME
+        rm android-sdk_*-linux.tgz
 	done
 else
      echo "Android SDK already installed to $ANDROID_SDK_HOME.  Skipping."
@@ -35,30 +39,46 @@ fi
 
 #Download and install the Android NDK
 if [ ! -d "$ANDROID_NDK_HOME" ]; then 
-	for b in $(  wget -qO- http://developer.android.com/sdk/ndk/index.html | egrep -o "http://dl.google.com[^\"']*linux-x86.tar.bz2"
- ); do wget $b && tar --wildcards --no-anchored -xjvf android-ndk-*-linux-x86.tar.bz2; mv android-ndk-*/ $ANDROID_NDK_HOME; rm android-ndk-*-linux-x86.tar.bz2;
+    filepath=`wget -qO- http://developer.android.com/ndk/downloads/index.html | egrep -o "http://dl.google.com[^\"']*linux-x86_64.bin"`
+    notinitdone=true
+    for fpath in $filepath; 
+    do 
+        fname=`basename $filepath`
+        notinitdone=false
+        rm $fname
+        wget $fpath
+        chmod +x $fname
+        ./$fname
+        dname=`ls -d */ | grep android-ndk`
+        mv $dname $ANDROID_NDK_HOME
+        rm $fname
 	done
+    if $notinitdone;
+    then
+        >&2 echo "Android NDK filepath is wrong. Reparse it."
+    fi
 else
     echo "Android NDK already installed to $ANDROID_NDK_HOME.  Skipping."
 fi
 
-#Determine if there is a 32 or 64-bit operating system installed and then install ia32-libs if necessary.
-if $install_adb;then
-    d=ia32-libs
-    if [[ `getconf LONG_BIT` = "64" ]]; 
-    then
-        echo "64-bit operating system detected.  Checking to see if $d is installed."
+# Determine if there is a 32 or 64-bit operating system installed and then install ia32-libs if necessary.
+# Not needed now in Ubunu 14.04
+# if $install_adb;then
+#     d=ia32-libs
+#     if [[ `getconf LONG_BIT` = "64" ]]; 
+#     then
+#         echo "64-bit operating system detected.  Checking to see if $d is installed."
 
-        if [[ $(dpkg-query -f'${Status}' --show $d 2>/dev/null) = *\ installed ]]; then
-            echo "$d already installed."
-        else
-            echo "Installing now..."
-             sudo apt-get --force-yes -y install $d
-        fi
-    else
-        echo "32-bit operating system detected.  Skipping."
-    fi
-fi
+#         if [[ $(dpkg-query -f'${Status}' --show $d 2>/dev/null) = *\ installed ]]; then
+#             echo "$d already installed."
+#         else
+#             echo "Installing now..."
+#              sudo apt-get --force-yes -y install $d
+#         fi
+#     else
+#         echo "32-bit operating system detected.  Skipping."
+#     fi
+# fi
 
 #Install the platform-tools
 if [ ! -d "$ANDROID_SDK_HOME/platform-tools" ];then
@@ -67,7 +87,7 @@ fi
 
 #Check if the ADB environment is set up.
 
-if grep -q '$ANDROID_SDK_HOME/platform-tools' $HOME/.bashrc; 
+if grep -q '$ANDROID_SDK_HOME/platform-tools' $HOME/.bashrc;
 then
     echo "ADB environment already set up"
 else

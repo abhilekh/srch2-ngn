@@ -1,12 +1,12 @@
-#!/bin/bash - 
+#!/bin/bash -
 #===============================================================================
 #
 #          FILE: build_android.sh
-# 
-#         USAGE: ./build_android.sh 
-# 
-#   DESCRIPTION: 
-# 
+#
+#         USAGE: ./build_android.sh
+#
+#   DESCRIPTION:
+#
 #       OPTIONS: ---
 #  REQUIREMENTS: ---
 #          BUGS: ---
@@ -23,7 +23,7 @@ export ANDROID_NDK_HOME="$HOME/software/android-ndk"
 export ANDROID_CMAKE_HOME="$HOME/software/android-cmake"
 SCRIPT_PWD=$PWD
 
-# download android-cmake 
+# download android-cmake
 [ ! -d $ANDROID_CMAKE_HOME ] && hg clone https://code.google.com/p/android-cmake/ $ANDROID_CMAKE_HOME
 
 ./install_sdk_ndk.sh
@@ -36,11 +36,11 @@ export ANDROID_STANDALONE_TOOLCHAIN="$HOME/software/android-toolchain-arm"
 # TODO: make it work for each chip set automaticlly
 #       hint: also can be set using android-cmake by setting ANDROID_ABI
 $ANDROID_NDK_HOME/build/tools/make-standalone-toolchain.sh --platform=android-8 \
-        --install-dir=$ANDROID_STANDALONE_TOOLCHAIN
+        --install-dir=$ANDROID_STANDALONE_TOOLCHAIN --toolchain=arm-linux-androideabi-4.9
 
 ANDTOOLCHAIN=$HOME/software/android-cmake/toolchain/android.toolchain.cmake
-if grep -q $ANDTOOLCHAIN $HOME/.bashrc; 
-then 
+if grep -q $ANDTOOLCHAIN $HOME/.bashrc;
+then
     echo "skip alias"
 else
     echo "export ANDROID_STANDALONE_TOOLCHAIN=$ANDROID_STANDALONE_TOOLCHAIN" >> $HOME/.bashrc
@@ -55,7 +55,7 @@ if [ `ls -l $ANDROID_STANDALONE_TOOLCHAIN/user/lib/libboost_*.a | wc -l` -lt 9 ]
     mv CMakeLists.txt CMakeLists.txt.orig
     cp $SCRIPT_PWD/settings/CMakeLists.Boost_add_serialization.txt CMakeLists.txt
     mkdir build
-    cd build
+    cd build_android
     cmake -DCMAKE_TOOLCHAIN_FILE=$ANDTOOLCHAIN ..
     make -j3
     make install
@@ -69,7 +69,7 @@ OPENSSL_HOME="$HOME/software/openssl-android"
 if [ ! -d $OPENSSL_HOME ];then
     git clone https://github.com/guardianproject/openssl-android.git $OPENSSL_HOME
     cd $OPENSSL_HOME
-    # Change the version of 4.* into the exist one by checking 
+    # Change the version of 4.* into the exist one by checking
     # $ANDROID_NDK_HOME/toolchain/*-androideabi-4.*
     $ANDROID_NDK_HOME/ndk-build NDK_TOOLCHAIN_VERSION=4.6
     cp -r libs/armeabi/*.so $ANDROID_STANDALONE_TOOLCHAIN/user/lib/
