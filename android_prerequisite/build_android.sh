@@ -23,15 +23,17 @@ export ANDROID_SDK_HOME="$SOFT/android-sdk"
 export ANDROID_NDK_HOME="$SOFT/android-ndk"
 export ANDROID_NDK_ROOT=$ANDROID_NDK_HOME
 export ANDROID_CMAKE_HOME="$SOFT/android-cmake"
+export ANDROID_STANDALONE_TOOLCHAIN="$SOFT/android-toolchain-arm"
+export OPENSSL_HOME="$SOFT/openssl-android"
 SCRIPT_PWD=$PWD
 
 # download android-cmake
-[ ! -d $ANDROID_CMAKE_HOME ] && hg clone https://code.google.com/p/android-cmake/ $ANDROID_CMAKE_HOME
+[ ! -d $ANDROID_CMAKE_HOME ] && git clone https://github.com/abhilekh/android-cmake.git $ANDROID_CMAKE_HOME
 
 ./install_sdk_ndk.sh
 [ $? -ne 0 ] && { echo "install sdk and ndk error"; exit -1;}
 
-export ANDROID_STANDALONE_TOOLCHAIN="$HOME/software/android-toolchain-arm"
+
 # default arm:  --toolchain=arm-linux-androideabi-4.6
 # set to x86:   --toolchain=x86-4.4.3 --arch=x86
 # set to mips:  --toolchain=mipsel-linux-android-4.6 --arch=mips
@@ -50,6 +52,7 @@ else
 fi
 
 #Install Boost
+sudo apt-get install libboost-dev
 if [ `ls -l $ANDROID_STANDALONE_TOOLCHAIN/user/lib/libboost_*.a | wc -l` -lt 9 ];then
     rm -f $ANDROID_STANDALONE_TOOLCHAIN/user/lib/libboost_*.so #Force to rm shared library
     cd $ANDROID_CMAKE_HOME/common-libs/boost
@@ -67,13 +70,31 @@ else
 fi
 
 #Install open-ssl
-OPENSSL_HOME="$HOME/software/openssl-android"
 if [ ! -d $OPENSSL_HOME ];then
     git clone https://github.com/guardianproject/openssl-android.git $OPENSSL_HOME
     cd $OPENSSL_HOME
     # Change the version of 4.* into the exist one by checking
     # $ANDROID_NDK_HOME/toolchain/*-androideabi-4.*
     $ANDROID_NDK_HOME/ndk-build NDK_TOOLCHAIN_VERSION=4.9
-    cp -r libs/armeabi/*.so $ANDROID_STANDALONE_TOOLCHAIN/user/lib/
-    cp -r include/openssl   $ANDROID_STANDALONE_TOOLCHAIN/user/include/
+    cp -r libs/armeabi/*.so $ANDROID_STANDALONE_TOOLCHAIN/lib/
+    cp -r include/openssl   $ANDROID_STANDALONE_TOOLCHAIN/include/
 fi
+
+
+# if [ ! -d $OPENSSL_HOME ];then
+#     sudo -u $USER git clone https://github.com/guardianproject/openssl-android.git $OPENSSL_HOME
+#     cd $OPENSSL_HOME
+#     sudo -u $USER wget https://wiki.openssl.org/images/7/70/Setenv-android.sh
+#     # Change the version of 4.* into the exist one by checking
+#     # $ANDROID_NDK_HOME/toolchain/*-androideabi-4.*
+#     $ANDROID_NDK_HOME/ndk-build NDK_TOOLCHAIN_VERSION=4.9
+#     export ANDROID_NDK_ROOT=$ANDROID_NDK_HOME
+#     export _ANDROID_EABI="arm-linux-androideabi-4.9"
+#     sudo -u $USER bash ./Setenv-android.sh
+#     sudo -u $USER perl -pi -e 's/install: all install_docs install_sw/install: install_docs install_sw/g' Makefile.org
+#     sudo -u $USER . ./config shared no-ssl2 no-ssl3 no-comp no-hw no-engine --openssldir=/usr/local/ssl/android-14/
+
+#     sudo -u $USER cp -r libs/armeabi/*.so $ANDROID_STANDALONE_TOOLCHAIN/lib/
+#     sudo -u $USER cp -r include/openssl   $ANDROID_STANDALONE_TOOLCHAIN/include/
+#     cd SCRIPT_PWD
+# fi
