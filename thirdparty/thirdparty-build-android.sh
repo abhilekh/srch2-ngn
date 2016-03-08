@@ -38,6 +38,7 @@ if [ ! -d "libevent-2.0.21-stable" ]; then
   tar -xvf libevent-2.0.21-stable.tar.gz
 fi
 cd libevent-2.0.21-stable
+echo $CURRENTDIR
 ./configure --prefix=$CURRENTDIR/android --host=arm-linux-androideabi CC="arm-linux-androideabi-gcc --sysroot=$ANDROID_SYSROOT" CFLAGS=--sysroot=$ANDROID_SYSROOT  LDFLAGS=--sysroot=$ANDROID_SYSROOT
 make install
 :

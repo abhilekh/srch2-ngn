@@ -170,7 +170,7 @@ SET(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}")
     
     SET( CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
     
-    SET( Boost_ADDITIONAL_VERSIONS "1.34" "1.40.0" "1.40" "1.41")
+    SET( Boost_ADDITIONAL_VERSIONS "1.34" "1.40.0" "1.40" "1.41" "1.53")
 
     #always link boost statically. 
     SET(Boost_USE_STATIC_LIBS ON)
@@ -251,7 +251,7 @@ SET(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}")
     IF (BUILD_STATIC OR BUILD_SERVER)
         if (ANDROID_SERVER)
             # we statically link the srch2 core with srch2-server ..see src/core/CMakeLists.txt
-            SET(Srch2InstantSearch_LIBRARIES ${CMAKE_BINARY_DIR}/libs/armeabi-v7a/libsrch2_core.a)
+            SET(Srch2InstantSearch_LIBRARIES ${CMAKE_BINARY_DIR}/src/core/libsrch2_core.a)
         else()
             SET(Srch2InstantSearch_LIBRARIES ${CMAKE_BINARY_DIR}/src/core/libsrch2_core.a)
         endif()
