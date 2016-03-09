@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# Download for armarchitecture
+
 cd ./android_prerequisite
 ./build_android.sh
 read -s -n 1 key

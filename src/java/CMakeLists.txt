@@ -9,7 +9,26 @@ ELSE()
   SET(DEBUG "false")
 ENDIF()
 
-FIND_PACKAGE(Java)
+IF(ANDROID)
+    # This won't find arm architure on say amd arch
+    file(TO_CMAKE_PATH "$ENV{JAVA_HOME_ARM}" _JAVA_HOME)
+    SET(Java_JAVA_EXECUTABLE  "${_JAVA_HOME}/jre/bin/java")
+    SET(Java_JAR_EXECUTABLE  "${_JAVA_HOME}/bin/jar")
+    SET(Java_JAVAC_EXECUTABLE "${_JAVA_HOME}/bin/javac")
+    SET(Java_JAVAH_EXECUTABLE "${_JAVA_HOME}/bin/javah")
+    SET(Java_JAVADOC_EXECUTABLE "${_JAVA_HOME}/bin/javadoc")
+
+    mark_as_advanced(
+      Java_JAVA_EXECUTABLE
+      Java_JAR_EXECUTABLE
+      Java_JAVAC_EXECUTABLE
+      Java_JAVAH_EXECUTABLE
+      Java_JAVADOC_EXECUTABLE
+      )
+ELSE()
+    FIND_PACKAGE(Java)
+ENDIF()
+
 ADD_CUSTOM_TARGET(ant_build ALL)
 ADD_CUSTOM_COMMAND(TARGET ant_build
     COMMAND ant

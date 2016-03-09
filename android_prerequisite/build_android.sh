@@ -24,7 +24,7 @@ export ANDROID_NDK_HOME="$SOFT/android-ndk"
 export ANDROID_NDK_ROOT=$ANDROID_NDK_HOME
 export ANDROID_CMAKE_HOME="$SOFT/android-cmake"
 export ANDROID_STANDALONE_TOOLCHAIN="$SOFT/android-toolchain-arm"
-export OPENSSL_HOME="$SOFT/openssl-android"
+export OPENSSL_HOME="$SOFT/openssl-1.0.2"
 SCRIPT_PWD=$PWD
 
 # download android-cmake
@@ -76,8 +76,8 @@ if [ ! -d $OPENSSL_HOME ];then
     # Change the version of 4.* into the exist one by checking
     # $ANDROID_NDK_HOME/toolchain/*-androideabi-4.*
     $ANDROID_NDK_HOME/ndk-build NDK_TOOLCHAIN_VERSION=4.9
-    cp -r libs/armeabi/*.so $ANDROID_STANDALONE_TOOLCHAIN/lib/
-    cp -r include/openssl   $ANDROID_STANDALONE_TOOLCHAIN/include/
+    cp -r armeabi-v7a/lib/* $ANDROID_STANDALONE_TOOLCHAIN/lib/
+    cp -r include/*.h   $ANDROID_STANDALONE_TOOLCHAIN/include/
 fi
 
 
