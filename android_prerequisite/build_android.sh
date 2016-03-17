@@ -77,7 +77,7 @@ if [ ! -d $OPENSSL_HOME ];then
     # $ANDROID_NDK_HOME/toolchain/*-androideabi-4.*
     $ANDROID_NDK_HOME/ndk-build NDK_TOOLCHAIN_VERSION=4.9
     cp -r armeabi-v7a/lib/* $ANDROID_STANDALONE_TOOLCHAIN/lib/
-    cp -r include/*.h   $ANDROID_STANDALONE_TOOLCHAIN/include/
+    cp -r include/*   $ANDROID_STANDALONE_TOOLCHAIN/include/
 fi
 
 

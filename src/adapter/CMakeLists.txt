@@ -8,7 +8,7 @@ INCLUDE_DIRECTORIES(
 	${CMAKE_SOURCE_DIR}/src/adapter/
     ${Boost_INCLUDE_DIRS}
     ${CMAKE_SOURCE_DIR}
-    ${CMAKE_SOURCE_DIR}/thirdparty/event/include
+    ${CMAKE_SOURCE_DIR}/thirdparty/event/android/include
     ${CMAKE_SOURCE_DIR}/thirdparty/json/jsoncpp-src/include
 )
 
