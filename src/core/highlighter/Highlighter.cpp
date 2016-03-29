@@ -267,7 +267,7 @@ void AnalyzerBasedAlgorithm::getSnippet(const QueryResults* /*not used*/, unsign
 				assert(true);
 			}
 			if (matchFound) {
-				signed termLen = keywordStrToHighlight[i].key.size();
+				unsigned termLen = keywordStrToHighlight[i].key.size();
 				if (tokenType == ANALYZED_SYNONYM_TOKEN)  {
 					termLen = originalTokenCharLen;
 				}
@@ -900,8 +900,8 @@ void TermOffsetAlgorithm::getSnippet(const QueryResults* qr, unsigned recidx, un
 					Logger::debug("invalid term length or offset. Ignore this term");
 					flag = HIGHLIGHT_KEYWORD_INVALID;
 				}
-				matchedTermInfo mti = {flag, info.prefixKeyIdx, offsetPosition[_idx],
-						termLen, 0};
+				matchedTermInfo mti = {flag, static_cast<unsigned int>(info.prefixKeyIdx), offsetPosition[_idx],
+						static_cast<unsigned int>(termLen), 0};
 				if (keywordStrToHighlight[info.prefixKeyIdx].editDistance > 0)
 					mti.tagIndex = 1;
 				highlightPositions.push_back(mti);
