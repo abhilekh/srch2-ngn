@@ -1,12 +1,12 @@
-#!/bin/bash - 
+#!/bin/bash -
 #===============================================================================
 #
 #          FILE: build_android.sh
-# 
-#         USAGE: ./build_android.sh 
-# 
-#   DESCRIPTION: 
-# 
+#
+#         USAGE: ./build_android.sh
+#
+#   DESCRIPTION:
+#
 #       OPTIONS: ---
 #  REQUIREMENTS: ---
 #          BUGS: ---
@@ -23,7 +23,7 @@ export ANDROID_NDK_HOME="$HOME/software/android-ndk"
 export ANDROID_CMAKE_HOME="$HOME/software/android-cmake"
 SCRIPT_PWD=$PWD
 
-# download android-cmake 
+# download android-cmake
 [ ! -d $ANDROID_CMAKE_HOME ] && hg clone https://code.google.com/p/android-cmake/ $ANDROID_CMAKE_HOME
 
 ./install_sdk_ndk.sh
@@ -35,7 +35,7 @@ export ANDROID_STANDALONE_TOOLCHAIN="$HOME/software/android-toolchain-arm"
 # set to mips:  --toolchain=mipsel-linux-android-4.6 --arch=mips
 # TODO: make it work for each chip set automaticlly
 #       hint: also can be set using android-cmake by setting ANDROID_ABI
-$ANDROID_NDK_HOME/build/tools/make-standalone-toolchain.sh --platform=android-8 \
+$ANDROID_NDK_HOME/build/tools/make-standalone-toolchain.sh --platform=android-14 \
         --install-dir=$ANDROID_STANDALONE_TOOLCHAIN
 
 ANDTOOLCHAIN=$HOME/software/android-cmake/toolchain/android.toolchain.cmake
@@ -69,7 +69,7 @@ OPENSSL_HOME="$HOME/software/openssl-android"
 if [ ! -d $OPENSSL_HOME ];then
     git clone https://github.com/guardianproject/openssl-android.git $OPENSSL_HOME
     cd $OPENSSL_HOME
-    # Change the version of 4.* into the exist one by checking 
+    # Change the version of 4.* into the exist one by checking
     # $ANDROID_NDK_HOME/toolchain/*-androideabi-4.*
     $ANDROID_NDK_HOME/ndk-build NDK_TOOLCHAIN_VERSION=4.6
     cp -r libs/armeabi/*.so $ANDROID_STANDALONE_TOOLCHAIN/user/lib/

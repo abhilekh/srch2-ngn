@@ -29,7 +29,7 @@ export ANDROID_NDK_HOME=$ANDROID_INSTALL_DIR/android-ndk-r11c
 
 #install cmake toolchain for android
 if [ ! -d android-cmake ]; then
-    wget $ANDROID_CMAKE_URL 
+    wget $ANDROID_CMAKE_URL
     unzip `basename $ANDROID_CMAKE_URL` > /dev/null
 fi
 
@@ -46,7 +46,7 @@ alias android-cmake='cmake -DCMAKE_TOOLCHAIN_FILE=$CMAKE_TOOLCHAIN -DLIBRARY_OUT
 cd $CMAKE_TOOLCHAIN_HOME/common-libs/boost/
 cp $BASE_DIR/settings/CMakeLists.Boost_add_serialization.txt CMakeLists.txt
 if [[ ! -d boost_1_${BOOST_VERSION}_0 ]]; then
-    wget $BOOST_URL 
+    wget $BOOST_URL
     tar -xf `basename $BOOST_URL`
 fi
 ./patch_boost.sh boost_1_${BOOST_VERSION}_0
@@ -54,7 +54,7 @@ patch boost_1_${BOOST_VERSION}_0/boost/config/stdlib/libstdcpp3.hpp < $BASE_DIR/
 mkdir build
 cd build
 cmake -DCMAKE_TOOLCHAIN_FILE=$CMAKE_TOOLCHAIN ..
-make 
+make
 make install
 
 #install open-ssl
@@ -62,7 +62,7 @@ OPENSSL_HOME="$ANDROID_INSTALL_DIR/openssl-android"
 if [ ! -d $OPENSSL_HOME ];then
     git clone https://github.com/guardianproject/openssl-android.git $OPENSSL_HOME
     cd $OPENSSL_HOME
-    # Change the version of 4.* into the existing one by checking 
+    # Change the version of 4.* into the existing one by checking
     # $ANDROID_NDK_HOME/toolchain/*-androideabi-4.*
     $ANDROID_NDK_HOME/ndk-build NDK_TOOLCHAIN_VERSION=4.9
     cp -r libs/armeabi/*.so $ANDROID_STANDALONE_TOOLCHAIN/user/lib/
