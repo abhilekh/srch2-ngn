@@ -171,7 +171,7 @@ SET(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}")
 
     SET( CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
 
-    SET( Boost_ADDITIONAL_VERSIONS "1.34" "1.40.0" "1.40" "1.41")
+    SET( Boost_ADDITIONAL_VERSIONS "1.34" "1.40.0" "1.40" "1.41" "1.56")
 
     #always link boost statically.
     SET(Boost_USE_STATIC_LIBS ON)
@@ -212,7 +212,7 @@ SET(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}")
         MESSAGE(STATUS "libz = ${z_LIBRARY}")
     ENDIF ()
 
-    FIND_LIBRARY(crypto_LIBRARY NAMES libcrypto.a PATHS ${sys_LIBRARY_DIRS})
+    FIND_LIBRARY(crypto_LIBRARY NAMES libcrypto.so PATHS ${sys_LIBRARY_DIRS})
     MESSAGE(STATUS "libcrypto = ${crypto_LIBRARY}")
 
     IF(ENABLE_PURIFY)

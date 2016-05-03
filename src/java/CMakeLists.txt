@@ -9,7 +9,27 @@ ELSE()
   SET(DEBUG "false")
 ENDIF()
 
-FIND_PACKAGE(Java)
+IF(ANDROID)
+    # This does not work in cmake version 2.8.11, so a hack
+    # FIND_PACKAGE(Java)
+
+    SET(Java_JAVA_EXECUTABLE  "$ENV{JAVA_HOME}/bin/java")
+    SET(Java_JAR_EXECUTABLE  "$ENV{JAVA_HOME}/bin/jar")
+    SET(Java_JAVAC_EXECUTABLE "$ENV{JAVA_HOME}/bin/javac")
+    SET(Java_JAVAH_EXECUTABLE "$ENV{JAVA_HOME}/bin/javah")
+    SET(Java_JAVADOC_EXECUTABLE "$ENV{JAVA_HOME}/bin/javadoc")
+
+    mark_as_advanced(
+      Java_JAVA_EXECUTABLE
+      Java_JAR_EXECUTABLE
+      Java_JAVAC_EXECUTABLE
+      Java_JAVAH_EXECUTABLE
+      Java_JAVADOC_EXECUTABLE
+      )
+ELSE()
+    FIND_PACKAGE(Java)
+ENDIF()
+
 ADD_CUSTOM_TARGET(ant_build ALL)
 ADD_CUSTOM_COMMAND(TARGET ant_build
     COMMAND ant

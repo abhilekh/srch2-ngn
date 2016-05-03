@@ -13,6 +13,9 @@ BOOST_URL=http://sourceforge.net/projects/boost/files/boost/1.${BOOST_VERSION}.0
 
 BASE_DIR=`pwd`
 
+# Lets not change bashrc. This assumes everyone uses bash
+ENVFILE=`dirname $BASE_DIR`/.envfile
+
 NDK_ZIP=`basename $NDK_URL`
 
 [[ -d $ANDROID_INSTALL_DIR ]] || mkdir $ANDROID_INSTALL_DIR
@@ -48,10 +51,12 @@ cp $BASE_DIR/settings/CMakeLists.Boost_add_serialization.txt CMakeLists.txt
 if [[ ! -d boost_1_${BOOST_VERSION}_0 ]]; then
     wget $BOOST_URL
     tar -xf `basename $BOOST_URL`
+    # Patch only first time
+    ./patch_boost.sh boost_1_${BOOST_VERSION}_0
+    patch boost_1_${BOOST_VERSION}_0/boost/config/stdlib/libstdcpp3.hpp < $BASE_DIR/settings/libstdcpp3.patch
 fi
-./patch_boost.sh boost_1_${BOOST_VERSION}_0
-patch boost_1_${BOOST_VERSION}_0/boost/config/stdlib/libstdcpp3.hpp < $BASE_DIR/settings/libstdcpp3.patch
-mkdir build
+
+mkdir -p build
 cd build
 cmake -DCMAKE_TOOLCHAIN_FILE=$CMAKE_TOOLCHAIN ..
 make
@@ -64,17 +69,18 @@ if [ ! -d $OPENSSL_HOME ];then
     cd $OPENSSL_HOME
     # Change the version of 4.* into the existing one by checking
     # $ANDROID_NDK_HOME/toolchain/*-androideabi-4.*
-    $ANDROID_NDK_HOME/ndk-build NDK_TOOLCHAIN_VERSION=4.9
+    $ANDROID_NDK_HOME/build/ndk-build NDK_TOOLCHAIN_VERSION=4.9
     cp -r libs/armeabi/*.so $ANDROID_STANDALONE_TOOLCHAIN/user/lib/
     cp -r include/openssl   $ANDROID_STANDALONE_TOOLCHAIN/user/include/
 fi
 
+touch $ENVFILE
 
-if grep -q $ANDTOOLCHAIN $HOME/.bashrc;
+if grep -q "android-toolchain" $ENVFILE;
 then
     echo "skip alias"
 else
     # env required for android-cmake
-    echo "export ANDROID_STANDALONE_TOOLCHAIN=$ANDROID_INSTALL_DIR/android-toolchain-arm-$API_LEVEL" >> $HOME/.bashrc
-    echo "alias android-cmake='cmake -DCMAKE_TOOLCHAIN_FILE=$CMAKE_TOOLCHAIN -DLIBRARY_OUTPUT_PATH_ROOT=.'" >> $HOME/.bashrc
+    echo "export ANDROID_STANDALONE_TOOLCHAIN=$ANDROID_INSTALL_DIR/android-toolchain-arm-$API_LEVEL" >> $ENVFILE
+    echo "alias android-cmake='cmake -DCMAKE_TOOLCHAIN_FILE=$CMAKE_TOOLCHAIN -DLIBRARY_OUTPUT_PATH_ROOT=.'" >> $ENVFILE
 fi
