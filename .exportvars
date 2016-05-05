@@ -1,0 +1,61 @@
+export SOFT="$HOME/android"
+
+export ANDROID_SDK_HOME="$SOFT/android-sdk"
+
+#NDK Data
+export ANDROID_NDK_HOME="$SOFT/android-ndk-r11c"
+export ANDROID_NDK_ROOT=$ANDROID_NDK_HOME
+#unset ANDROID_NDK
+#export ANDROID_NDK=$ANDROID_NDK_HOME
+#export NDK_ROOT=$ANDROID_NDK_HOME
+
+export ANDROID_CMAKE_HOME=$SOFT/android-cmake
+
+export ANDROID_STANDALONE_TOOLCHAIN=$SOFT/android-toolchain-arm-21
+export ANDROID_TOOLCHAIN_ROOT=$ANDROID_STANDALONE_TOOLCHAIN
+export NDK_TOOLCHAIN_VERSION=4.9
+
+
+if [[ $PATH != *"/MyDummy"* ]]
+then
+  #NotDoneBefore
+  export PATH=$PATH:$ANDROID_SDK_HOME/platform-tools
+  export PATH=$PATH:$ANDROID_SDK_HOME/tools
+  export PATH=$PATH:$ANDROID_NDK_HOME
+fi
+
+
+export ANDROID_API=android-19
+export ANDROID_ARCH=arch-arm
+export ANDROID_EABI=i686-linux-android-4.9
+export ANDROID_TOOLCHAIN=arm-linux-androideabi-4.9
+export ANDROID_HOST_ARCH=linux-x86_64
+export ANDROID_SYSROOT=$ANDROID_NDK_ROOT/platforms/$ANDROID_API/$ANDROID_ARCH
+alias android-cmake='cmake -DCMAKE_TOOLCHAIN_FILE=$ANDROID_CMAKE_HOME/toolchain/android.toolchain.cmake -DLIBRARY_OUTPUT_PATH_ROOT=.'
+
+if [[ $PATH != *"/MyDummy"* ]]
+then
+  #NotDoneBefore
+  export PATH=$PATH:$ANDROID_NDK_HOME/toolchain/$ANDROID_TOOLCHAIN/prebuild/$ANDROID_HOST_ARCH/bin/
+  export PATH=$PATH:$ANDROID_STANDALONE_TOOLCHAIN/bin
+fi
+
+export CXX=/usr/bin/gcc-5
+export CMAKE_CXX_COMPILER=/usr/bin/g++-5
+export CMAKE_C_COMPILER=/usr/bin/gcc-5
+
+export BOOST_ROOT=$ANDROID_CMAKE_HOME/common-libs/boost/
+#export BOOST_LOC=$ANDROID_STANDALONE_TOOLCHAIN/Boost-for-Android-Prebuilt/boost_1_53_0
+#export BOOST_INCLUDEDIR=$BOOST_LOC/include
+#export BOOST_LIBRARYDIR=$BOOST_ROOT/lib/armeabi-v7a
+export Boost_NO_SYSTEM_PATHS=ON
+
+export JAVA_HOME="/usr/lib/jvm/java-8-oracle"
+export JAVA_HOME_ARM=$SOFT/jdk1.8.0_73
+
+if [[ $PATH != *"/MyDummy"* ]]
+then
+  #NotDoneBefore
+  export PATH=$PATH:/MyDummy
+  export PATH=$JAVA_HOME/bin:$PATH             #This java is important for me
+fi
