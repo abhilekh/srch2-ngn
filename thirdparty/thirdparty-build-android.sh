@@ -35,7 +35,7 @@ if [ ! -d "android" ]; then
 fi
 CURRENTDIR=$(pwd)
 if [ ! -d "libevent-2.0.21-stable" ]; then
-  tar -xvf libevent-2.0.21-stable.tar.gz
+  tar -xvf libevent-2.0.21-stable-patched.tar.gz
 fi
 cd libevent-2.0.21-stable
 echo $CURRENTDIR
